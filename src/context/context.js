@@ -6,10 +6,15 @@ import axios from "axios";
 
 const rootUrl = "https://api.github.com";
 
-export const GitHubContext = createContext();
+export const GithubContext = createContext();
 
 export const GitHubProvider = ({ children }) => {
+  const [githubUser, setGithubUser] = useState(mockUser);
+  const [repos, setRepos] = useState(mockRepos);
+  const [followers, setFollowers] = useState(mockFollowers);
   return (
-    <GitHubContext.Provider value={"hello"}>{children}</GitHubContext.Provider>
+    <GithubContext.Provider value={{ githubUser, repos, followers }}>
+      {children}
+    </GithubContext.Provider>
   );
 };
