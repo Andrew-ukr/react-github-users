@@ -39,7 +39,6 @@ const Card = () => {
     updated_at,
     url,
   } = githubUser;
-  console.log(blog);
 
   return (
     <Wrapper>
