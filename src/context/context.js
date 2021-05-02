@@ -12,8 +12,33 @@ export const GitHubProvider = ({ children }) => {
   const [githubUser, setGithubUser] = useState(mockUser);
   const [repos, setRepos] = useState(mockRepos);
   const [followers, setFollowers] = useState(mockFollowers);
+  const [requests, setRequests] = useState(0);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState({ show: false, msg: "" });
+
+  const getRequest = () => {
+    axios(`${rootUrl}/rate_limit`)
+      .then(({ data }) => {
+        setRequests(data.rate.remaining);
+        if (data.rate.remaining === 0) {
+          toggleError(true, "sorry are exceeded your horly rate limits");
+        }
+      })
+      .catch((error) => console.log(error));
+  };
+
+  const toggleError = (show = false, msg = "") => {
+    setError({ show, msg });
+  };
+
+  useEffect(() => {
+    getRequest();
+  }, []);
+
   return (
-    <GithubContext.Provider value={{ githubUser, repos, followers }}>
+    <GithubContext.Provider
+      value={{ githubUser, repos, followers, requests, loading, error }}
+    >
       {children}
     </GithubContext.Provider>
   );
