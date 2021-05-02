@@ -34,20 +34,32 @@ const Repos = () => {
       return { label: item.label, value: item.stars };
     })
     .slice(0, 5);
-  console.log(mostPopular);
 
-  const chartData = [
-    { label: "HTML", value: "13" },
-    { label: "JavaScript", value: "50" },
-    { label: "CSS", value: "20" },
-  ];
+  // stars, forks
+
+  let { stars, forks } = repos.reduce(
+    (total, item) => {
+      const { stargazers_count, forks, name } = item;
+      total.stars[stargazers_count] = { label: name, value: stargazers_count };
+      total.forks[forks] = { label: name, value: forks };
+      return total;
+    },
+    { stars: {}, forks: {} }
+  );
+
+  const getMostData = (params) => {
+    return Object.values(params)
+      .sort((a, b) => b.value - a.value)
+      .slice(0, 5);
+  };
 
   return (
     <section className="section">
       <Wrapper className="section-center">
         <Pie3D data={mostUsed}></Pie3D>
-        <Column3D data={chartData}></Column3D>
+        <Column3D data={getMostData(stars)}></Column3D>
         <Doughnut2D data={mostPopular}></Doughnut2D>
+        <Bar3D data={getMostData(forks)}></Bar3D>
       </Wrapper>
     </section>
   );

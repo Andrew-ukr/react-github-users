@@ -21,9 +21,11 @@ const Column3D = ({ data }) => {
     dataSource: {
       // Chart Configuration
       chart: {
-        caption: "Languages",
-        theme: "fusion",
-        pieRadius: "40%",
+        caption: "Most Popular",
+        yAxisName: "Star",
+        xAxisName: "Repos",
+        xAxisNameFontSize: "16px",
+        yAxisNameFontSize: "16px",
       },
       // Chart Data
       data: data,
@@ -32,6 +34,5 @@ const Column3D = ({ data }) => {
 
   return <ReactFC {...chartConfigs} />;
 };
-
 
 export default Column3D;
