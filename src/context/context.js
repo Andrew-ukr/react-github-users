@@ -22,9 +22,24 @@ export const GitHubProvider = ({ children }) => {
     const res = await axios(`${rootUrl}/users/${user}`).catch((err) =>
       console.log(err)
     );
-    console.log(res);
     if (res) {
       setGithubUser(res.data);
+      const { login, followers_url } = res.data;
+
+      await Promise.allSettled([
+        axios(`${rootUrl}/users/${login}/repos?per_page=100`),
+        axios(`${followers_url}`),
+      ]).then((result) => {
+        const [repos, followers] = result;
+        const status = "fulfilled";
+        if (repos.status === status) {
+          setRepos(repos.value.data);
+        }
+        if (followers.status === status) {
+          setFollowers(followers.value.data);
+        }
+        console.log(result);
+      });
     } else {
       toggleError(true, "sorry are exceeded your horly rate limits");
     }
