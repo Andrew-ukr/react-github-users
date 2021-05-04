@@ -16,6 +16,19 @@ export const GitHubProvider = ({ children }) => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState({ show: false, msg: "" });
 
+  const searchGitHubUsers = async (user) => {
+    toggleError();
+    const res = await axios(`${rootUrl}/users/${user}`).catch((err) =>
+      console.log(err)
+    );
+    console.log(res);
+    if (res) {
+      setGithubUser(res.data);
+    } else {
+      toggleError(true, "sorry are exceeded your horly rate limits");
+    }
+  };
+
   const getRequest = () => {
     axios(`${rootUrl}/rate_limit`)
       .then(({ data }) => {
@@ -33,11 +46,19 @@ export const GitHubProvider = ({ children }) => {
 
   useEffect(() => {
     getRequest();
-  }, []);
+  }, [githubUser]);
 
   return (
     <GithubContext.Provider
-      value={{ githubUser, repos, followers, requests, loading, error }}
+      value={{
+        githubUser,
+        repos,
+        followers,
+        requests,
+        loading,
+        error,
+        searchGitHubUsers,
+      }}
     >
       {children}
     </GithubContext.Provider>
